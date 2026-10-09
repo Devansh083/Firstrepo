@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Devansh · Power Electronics</title>
+  <meta name="description" content="EEE undergraduate at VIT Chennai working on power electronics for EVs, renewable energy and smart grids — from MATLAB/Simulink simulation to OPAL-RT real-time hardware.">
+  <meta name="theme-color" content="#0a1220">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">⏚</span> Devansh</a>
+  <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+  <nav class="nav-links">
+    <a href="#research">Research</a>
+    <a href="#projects">Projects</a>
+    <a href="#experience">Experience</a>
+    <a href="#skills">Skills</a>
+    <a href="#education">Education</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-text">
+      <p class="eyebrow mono">B.Tech EEE · VIT Chennai · 2024–2028</p>
+      <h1>Power electronics,<br><span class="accent">from simulation to real-time hardware.</span></h1>
+      <p class="lede">I design and control power converters for EVs, renewable energy and smart grids. My current work is a multiport bidirectional DC-DC converter for EV microgrids. I took it from an IEEE paper replication in MATLAB/Simulink to closed-loop control and real-time testing on OPAL-RT.</p>
+      <div class="cta">
+        <!-- TODO: put your resume at assets/resume.pdf -->
+        <a class="btn primary" href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a>
+        <!-- TODO: replace with your real LinkedIn URL -->
+        <a class="btn" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://github.com/Devansh083" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <ul class="stats">
+        <li><b>≈98.5%</b><span>converter efficiency at 400 V (simulation)</span></li>
+        <li><b>OPAL-RT</b><span>OP4610XG real-time validation</span></li>
+        <li><b>8.91</b><span>CGPA</span></li>
+      </ul>
+    </div>
+
+    <figure class="scope" aria-label="Illustrative oscilloscope view of converter switching waveforms">
+      <div class="scope-head mono">
+        <span><i class="ch ch1"></i>CH1 Gate PWM</span>
+        <span><i class="ch ch2"></i>CH2 i<sub>L</sub></span>
+        <span><i class="ch ch3"></i>CH3 V<sub>out</sub></span>
+      </div>
+      <canvas id="scope" width="560" height="320"></canvas>
+      <figcaption class="mono">Illustrative boost-mode waveforms (decorative, not measured data)</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ FEATURED RESEARCH ============ -->
+  <section id="research" class="section">
+    <p class="kicker mono">01 · Featured research</p>
+    <h2>Multiport Bidirectional DC-DC Converter with Asymmetrical Duty-Cycle Limit Control (A-DLC) for EV Microgrids</h2>
+    <p class="meta mono">Research Intern · Centre for Smart Grid Technologies, VIT Chennai · Mar 2026 – present</p>
+
+    <div class="research-grid">
+      <div class="research-body">
+        <h3>What I did</h3>
+        <ol class="steps">
+          <li><b>Replicated the base paper.</b> Built the IEEE base-paper converter in MATLAB/Simulink (Simscape Electrical) and checked it open loop.</li>
+          <li><b>Closed the loop.</b> Designed the boost-mode controller: duty-cycle determination, PI voltage/current loops and limiters. I tuned and debugged it until the results matched the paper within roughly 1–3%.</li>
+          <li><b>Validated performance.</b> Reached about <b>98.5% efficiency at 400 V output</b> and also validated <b>800 V output</b> operation, all in simulation.</li>
+          <li><b>Adapted it for EVs.</b> Rebuilt the design as a hybrid energy storage system (HESS): Port 1 is the battery (input), Port 2 is a supercapacitor, and the output is the battery.</li>
+          <li><b>Moved to real time.</b> Ran the modified model on an <b>OPAL-RT OP4610XG</b> real-time simulator.</li>
+          <li><b>Documented the results.</b> Logged all open- and closed-loop data and produced IEEE-style efficiency vs output-power plots in Python/Matplotlib.</li>
+        </ol>
+        <p class="status"><span class="pill">Status</span> A journal manuscript (MATLAB + OPAL-RT results) is in preparation.</p>
+        <ul class="tags">
+          <li>MATLAB/Simulink</li><li>Simscape Electrical</li><li>PI control</li><li>OPAL-RT</li><li>HESS</li><li>Python · Matplotlib</li>
+        </ul>
+      </div>
+
+      <figure class="diagram">
+        <svg viewBox="0 0 420 300" role="img" aria-labelledby="hessTitle">
+          <title id="hessTitle">Block diagram: battery and supercapacitor ports feed a multiport bidirectional DC-DC converter controlled by A-DLC, whose output connects to the battery / DC link; the model runs on OPAL-RT</title>
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+          </defs>
+          <g class="blk"><rect x="10" y="40" width="110" height="54" rx="8"/><text x="65" y="63">Port 1</text><text x="65" y="80" class="s">Battery (input)</text></g>
+          <g class="blk"><rect x="10" y="150" width="110" height="54" rx="8"/><text x="65" y="173">Port 2</text><text x="65" y="190" class="s">Supercapacitor</text></g>
+          <g class="blk main"><rect x="160" y="70" width="120" height="110" rx="10"/><text x="220" y="112">Multiport</text><text x="220" y="129">bidirectional</text><text x="220" y="146">DC-DC</text></g>
+          <g class="blk"><rect x="310" y="98" width="100" height="54" rx="8"/><text x="360" y="121">Output</text><text x="360" y="138" class="s">Battery</text></g>
+          <g class="blk ctrl"><rect x="160" y="222" width="120" height="50" rx="8"/><text x="220" y="243">A-DLC control</text><text x="220" y="260" class="s">duty · PI · limits</text></g>
+          <g class="wire">
+            <path d="M120 67 H140 V100 H158" marker-end="url(#arr)" marker-start="url(#arr)"/>
+            <path d="M120 177 H140 V150 H158" marker-end="url(#arr)" marker-start="url(#arr)"/>
+            <path d="M280 125 H308" marker-end="url(#arr)" marker-start="url(#arr)"/>
+            <path d="M220 222 V182" marker-end="url(#arr)" class="dash"/>
+          </g>
+          <text x="360" y="200" class="s rt">Real-time: OPAL-RT</text><text x="360" y="215" class="s rt">OP4610XG</text>
+        </svg>
+        <figcaption>System architecture (HESS configuration)</figcaption>
+      </figure>
+    </div>
+
+    <h3 class="sub-h">Results</h3>
+    <div class="plots">
+      <!-- Drop your real figures into assets/img/ with these file names. Missing images show a labelled placeholder. -->
+      <figure class="plot">
+        <img src="assets/img/efficiency-vs-power.png" alt="Efficiency vs output power, IEEE-style plot" data-file="efficiency-vs-power.png">
+        <figcaption>Efficiency vs output power (400 V output)</figcaption>
+      </figure>
+      <figure class="plot">
+        <img src="assets/img/closed-loop-response.png" alt="Closed-loop boost-mode output voltage response" data-file="closed-loop-response.png">
+        <figcaption>Closed-loop boost-mode response vs base paper</figcaption>
+      </figure>
+      <figure class="plot">
+        <img src="assets/img/opal-rt-setup.jpg" alt="OPAL-RT OP4610XG real-time simulation setup" data-file="opal-rt-setup.jpg">
+        <figcaption>OPAL-RT OP4610XG real-time test setup</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section id="projects" class="section">
+    <p class="kicker mono">02 · Projects</p>
+    <h2>Selected projects</h2>
+    <div class="cards">
+      <article class="card">
+        <div class="card-top"><span class="domain mono">Renewables · Control</span></div>
+        <h3>PV MPPT Algorithm Optimisation</h3>
+        <p>Modelled a photovoltaic system in MATLAB/Simulink and compared Perturb &amp; Observe against Incremental Conductance MPPT under a step change in irradiance. I looked at tracking speed, steady-state oscillation and power extracted.</p>
+        <figure class="plot sm"><img src="assets/img/mppt-comparison.png" alt="P&amp;O vs Incremental Conductance under irradiance step" data-file="mppt-comparison.png"></figure>
+        <ul class="tags"><li>MATLAB/Simulink</li><li>P&amp;O</li><li>Incremental Conductance</li></ul>
+      </article>
+
+      <article class="card">
+        <div class="card-top"><span class="domain mono">Embedded · Applied ML</span></div>
+        <h3>ESP32 Solar Panel Health Monitor</h3>
+        <p>An ESP32 node that reads light (BH1750), panel voltage (0–25 V sensor) and temperature (DHT22). Threshold rules detect abnormal conditions and show maintenance messages on an OLED. A small feed-forward neural network, exported to TensorFlow Lite and a C header, supports and cross-checks those rule-based decisions.</p>
+        <p class="outcome mono">≈89.7% test accuracy (NN)</p>
+        <figure class="plot sm"><img src="assets/img/esp32-monitor.jpg" alt="ESP32 solar panel health monitor hardware" data-file="esp32-monitor.jpg"></figure>
+        <ul class="tags"><li>ESP32</li><li>Sensors</li><li>TensorFlow Lite</li><li>Python</li></ul>
+      </article>
+
+      <article class="card">
+        <div class="card-top"><span class="domain mono">Analog design</span></div>
+        <h3>Piezoelectric Vibration Sensor Interface</h3>
+        <p>A charge amplifier on a single 5 V supply with a 2.5 V virtual ground, built around a UA741 op-amp. A high-pass filter at 72.3 Hz removes low-frequency drift, and an Arduino ADC digitises the output. Aug–Oct 2025.</p>
+        <p class="outcome mono">f<sub>c</sub> = 72.3 Hz HPF · single-supply</p>
+        <figure class="plot sm"><img src="assets/img/piezo-circuit.png" alt="Piezoelectric charge amplifier schematic" data-file="piezo-circuit.png"></figure>
+        <ul class="tags"><li>Op-amps</li><li>Filter design</li><li>Arduino</li></ul>
+      </article>
+    </div>
+
+    <h3 class="sub-h">Coursework &amp; in progress</h3>
+    <div class="mini-list">
+      <div class="mini">
+        <span class="pill warn">In progress</span>
+        <h4>Smart Earth Leakage Monitoring System <span class="muted">(MPMC course)</span></h4>
+        <p>MATLAB/Simulink comparison of residual-current sensing with a single core-balance CT against two independent current sensors with a computed difference, including leakage trip logic.</p>
+      </div>
+      <div class="mini">
+        <span class="pill">Coursework</span>
+        <h4>Battery Health Determination using DSP</h4>
+        <p>A signal-processing approach to estimating Li-ion battery state of health from cycling data. Presented as coursework.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section id="experience" class="section">
+    <p class="kicker mono">03 · Experience</p>
+    <h2>Research internship</h2>
+    <p class="meta mono">Centre for Smart Grid Technologies, VIT Chennai</p>
+    <ol class="timeline">
+      <li><span class="when mono">Mar – May 2026</span><div><b>Base-paper replication.</b> Rebuilt the multiport converter from an IEEE paper in MATLAB/Simulink and checked the open-loop operation.</div></li>
+      <li><span class="when mono">Summer 2026</span><div><b>Closed-loop control.</b> Built the boost-mode controller (duty-cycle determination, PI loops, limiters) and matched the paper's results within about 1–3%. Validated about 98.5% efficiency at 400 V and 800 V operation.</div></li>
+      <li><span class="when mono">2026 – present</span><div><b>EV HESS and real time.</b> Adapted the converter to a battery + supercapacitor architecture and tested it on an OPAL-RT OP4610XG. Journal manuscript in preparation.</div></li>
+    </ol>
+  </section>
+
+  <!-- ============ SKILLS ============ -->
+  <section id="skills" class="section">
+    <p class="kicker mono">04 · Skills &amp; tools</p>
+    <h2>What I work with</h2>
+    <div class="skills">
+      <div class="skill-col">
+        <h3><i class="lvl strong"></i>Strong</h3>
+        <ul>
+          <li>MATLAB/Simulink (Simscape Electrical)</li>
+          <li>Power converter modelling</li>
+          <li>Closed-loop converter control (PI, duty-cycle limits)</li>
+          <li>OPAL-RT real-time simulation</li>
+        </ul>
+      </div>
+      <div class="skill-col">
+        <h3><i class="lvl working"></i>Working</h3>
+        <ul>
+          <li>Python (Matplotlib, basic ML)</li>
+          <li>ESP32 / Arduino</li>
+          <li>Analog circuit design</li>
+          <li>8051 assembly (coursework)</li>
+        </ul>
+      </div>
+    </div>
+    <!-- TODO: add LTspice, LabVIEW, ModelSim, Verilog, HOMER, C/C++ here only once confirmed -->
+  </section>
+
+  <!-- ============ EDUCATION ============ -->
+  <section id="education" class="section">
+    <p class="kicker mono">05 · Education</p>
+    <h2>Education</h2>
+    <div class="edu">
+      <div>
+        <h3>B.Tech, Electrical &amp; Electronics Engineering</h3>
+        <p class="muted">Vellore Institute of Technology, Chennai</p>
+      </div>
+      <div class="edu-right mono">
+        <span>2024 – 2028</span>
+        <span class="accent">CGPA 8.91</span>
+      </div>
+    </div>
+    <!-- TODO: once confirmed, add an "Activities" block for IEEE and Enactus roles here -->
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact" class="section contact">
+    <p class="kicker mono">06 · Contact</p>
+    <h2>Let's talk power electronics</h2>
+    <p class="lede">I'm looking for Summer 2027 internships in electrical core, EV and energy roles. I'm happy to discuss converters, control or real-time simulation.</p>
+    <div class="cta">
+      <!-- TODO: replace with the email you want public -->
+      <a class="btn primary" href="mailto:your.email@example.com">Email me</a>
+      <a class="btn" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" href="https://github.com/Devansh083" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer mono">
+  <span>© <span id="year"></span> Devansh</span>
+  <span>Built as a static site · hosted on GitHub Pages</span>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
