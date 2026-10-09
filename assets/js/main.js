@@ -89,6 +89,8 @@ const stepIO = new IntersectionObserver((entries) => entries.forEach((e) => {
   const n = e.target.dataset.step;
   steps.forEach((s) => s.classList.toggle('active', s === e.target));
   scenes.forEach((s) => s.classList.toggle('on', s.dataset.scene === n));
+  document.getElementById('stageCaption').textContent = e.target.dataset.caption;
+  document.getElementById('stageMode').textContent = e.target.dataset.hud;
 }), { rootMargin: '-45% 0px -45% 0px' });
 steps.forEach((s) => stepIO.observe(s));
 steps[0].classList.add('active');
@@ -125,66 +127,8 @@ document.querySelectorAll('.card').forEach((c) => c.addEventListener('pointermov
   c.style.setProperty('--my', `${e.clientY - r.top}px`);
 }));
 
-/* ---------- background: PCB traces with travelling current pulses ---------- */
-(function pcb() {
-  const cv = document.getElementById('pcb');
-  const ctx = cv.getContext('2d');
-  let traces = [], pulses = [], W, H, dpr;
-
-  function build() {
-    dpr = Math.min(2, devicePixelRatio || 1);
-    W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr;
-    traces = [];
-    const g = 36 * dpr, n = Math.round((innerWidth * innerHeight) / 26000);
-    for (let i = 0; i < n; i++) {
-      let x = Math.round((Math.random() * W) / g) * g, y = Math.round((Math.random() * H) / g) * g;
-      const pts = [[x, y]];
-      let dir = Math.floor(Math.random() * 4);
-      for (let s = 0; s < 3 + Math.floor(Math.random() * 4); s++) {
-        const len = g * (1 + Math.floor(Math.random() * 4));
-        const diag = Math.random() < 0.3;
-        const dx = [1, 0, -1, 0][dir], dy = [0, 1, 0, -1][dir];
-        if (diag) { x += (dx || (Math.random() < .5 ? 1 : -1)) * len * .7; y += (dy || (Math.random() < .5 ? 1 : -1)) * len * .7; }
-        else { x += dx * len; y += dy * len; }
-        pts.push([x, y]);
-        dir = (dir + (Math.random() < 0.5 ? 1 : 3)) % 4;
-      }
-      let L = 0; const seg = [];
-      for (let k = 1; k < pts.length; k++) { const d = Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]); seg.push(d); L += d; }
-      traces.push({ pts, seg, L });
-    }
-    pulses = traces.filter(() => Math.random() < 0.35).map((t) => ({ t, p: Math.random(), v: 0.0015 + Math.random() * 0.003 }));
-  }
-
-  function at(t, p) {
-    let d = p * t.L;
-    for (let k = 0; k < t.seg.length; k++) {
-      if (d <= t.seg[k]) { const a = t.pts[k], b = t.pts[k + 1], f = d / t.seg[k]; return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f]; }
-      d -= t.seg[k];
-    }
-    return t.pts[t.pts.length - 1];
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    ctx.lineWidth = 1.2 * dpr; ctx.strokeStyle = 'rgba(90,130,180,.13)';
-    for (const t of traces) {
-      ctx.beginPath(); t.pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.stroke();
-      const [ex, ey] = t.pts[t.pts.length - 1];
-      ctx.beginPath(); ctx.arc(ex, ey, 2.6 * dpr, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(90,130,180,.22)'; ctx.stroke(); ctx.strokeStyle = 'rgba(90,130,180,.13)';
-    }
-    for (const q of pulses) {
-      const [x, y] = at(q.t, q.p);
-      const grd = ctx.createRadialGradient(x, y, 0, x, y, 7 * dpr);
-      grd.addColorStop(0, 'rgba(45,212,191,.9)'); grd.addColorStop(1, 'rgba(45,212,191,0)');
-      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(x, y, 7 * dpr, 0, Math.PI * 2); ctx.fill();
-      q.p += q.v; if (q.p > 1) q.p = 0;
-    }
-    if (!reduceMotion) requestAnimationFrame(draw);
-  }
-  build(); draw();
-  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { build(); if (reduceMotion) draw(); }, 200); });
-})();
+/* ---------- 3D fallback: show 2D visuals if WebGL never comes up ---------- */
+setTimeout(() => { if (!window.__board3d) document.documentElement.classList.add('no3d'); }, 6000);
 
 /* ---------- bench: interleaved boost waveforms (ideal, normalised) ---------- */
 (function bench() {

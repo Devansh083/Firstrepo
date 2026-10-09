@@ -1,6 +1,6 @@
 # Portfolio: Power electronics, from simulation to real-time hardware
 
-A static personal portfolio (HTML/CSS/JS, no build step) for a B.Tech EEE student at VIT Chennai working on power electronics for EVs, renewables and smart grids.
+A static personal portfolio (HTML/CSS/JS, no build step) with a scroll-driven 3D converter board built in Three.js (loaded from jsDelivr; falls back to a 2D schematic if WebGL is unavailable), for a B.Tech EEE student at VIT Chennai working on power electronics for EVs, renewables and smart grids.
 
 ## Preview locally
 

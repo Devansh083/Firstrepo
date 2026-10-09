@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<canvas id="pcb" aria-hidden="true"></canvas>
+<canvas id="three" aria-hidden="true"></canvas>
 <div class="charge" aria-hidden="true"><span id="chargeFill"></span></div>
 
 <!-- ================= NAV ================= -->
@@ -53,7 +53,29 @@
       </div>
     </div>
 
-    <!-- Live schematic: interleaved multiport bidirectional converter -->
+    <div class="hero-visual">
+      <!-- 3D converter board renders into this slot (canvas sits behind the page) -->
+      <div class="slot3d" id="heroSlot" role="img" aria-label="Interactive 3D model of a multiport power converter board">
+        <div class="hud mono">
+          <span class="hud-tl">converter_board · 3D</span>
+          <span class="hud-tr" id="heroHudState">ASSEMBLED</span>
+          <span class="hud-bl">drag to rotate</span>
+          <span class="hud-br">L1 L2 · Q1–Q4 · C<sub>o</sub></span>
+        </div>
+      </div>
+      <div class="hud-ctrl">
+        <div class="seg" role="group" aria-label="3D view">
+          <button class="on" data-view="assembled">Assembled</button>
+          <button data-view="exploded">Exploded</button>
+          <button data-view="blueprint">Blueprint</button>
+        </div>
+        <div class="seg" role="group" aria-label="Power flow">
+          <button class="on" data-flow="boost">Boost</button>
+          <button data-flow="buck">Buck</button>
+        </div>
+      </div>
+
+    <!-- Fallback when WebGL is unavailable: 2D schematic -->
     <figure class="schem-card" aria-label="Animated schematic of an interleaved multiport bidirectional DC-DC converter">
       <div class="schem-bar mono">
         <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
@@ -126,6 +148,7 @@
       </div>
       <figcaption class="mono">Topology sketch after the IEEE A-DLC base paper · HESS port assignment</figcaption>
     </figure>
+    </div>
 
     <ul class="telemetry">
       <li><span class="mono k">η @ 400 V</span><b><span data-count="98.5" data-dec="1">0</span><small>%</small></b><span class="v">closed-loop boost, simulation</span></li>
@@ -153,7 +176,12 @@
     <div class="story">
       <!-- sticky visual -->
       <div class="stage-wrap">
-        <div class="stage">
+        <div class="stage" id="stage">
+          <div class="hud mono">
+            <span class="hud-tl" id="stageCaption">STEP 1 · REPLICATE</span>
+            <span class="hud-tr"><i class="rec"></i>LIVE</span>
+            <span class="hud-bl" id="stageMode">blueprint · simulation</span>
+          </div>
           <!-- 0: replication -->
           <svg class="scene on" data-scene="0" viewBox="0 0 400 300" role="img" aria-label="Replication: IEEE base paper to Simulink model, open-loop buck and boost">
             <g class="bx"><rect x="20" y="40" width="110" height="64" rx="10"/><text x="75" y="68">IEEE Trans.</text><text x="75" y="86" class="s">A-DLC base paper</text></g>
@@ -212,13 +240,13 @@
           <p>Asymmetrical Duty-Cycle Limit Control on an interleaved, SiC-based converter with 72 V / 48 V low-voltage ports and a 400 V / 800 V high-voltage port, after an IEEE Transactions base paper.</p>
         </article>
 
-        <article class="step" data-step="0">
+        <article class="step" data-step="0" data-caption="STEP 1 · REPLICATE" data-hud="blueprint · simulation">
           <span class="when mono">Mar – May 2026</span>
           <h4>Replicated the base paper in MATLAB/Simulink</h4>
           <p>Built the full converter in Simscape Electrical. Open-loop buck mode reached about <b>98% efficiency</b>. In boost mode I traced and debugged the loss sources until the model behaved like the paper.</p>
         </article>
 
-        <article class="step" data-step="1">
+        <article class="step" data-step="1" data-caption="STEP 2 · CLOSE THE LOOP" data-hud="controller + switches active">
           <span class="when mono">Summer 2026 · internship</span>
           <h4>Designed the closed-loop boost controller</h4>
           <p>Duty-cycle determination, PI voltage/current loops and limiters, tuned until results matched the paper within <b>~1–3%</b>. Reached about <b>98.5% efficiency at 400 V</b> and validated <b>800 V</b> operation. All open- and closed-loop data is logged in Excel.</p>
@@ -230,13 +258,13 @@
           <p>The same converter, re-architected as a HESS for an EV environment.</p>
         </article>
 
-        <article class="step" data-step="2">
+        <article class="step" data-step="2" data-caption="STEP 3 · ADAPT FOR EVs" data-hud="battery + supercap → EV battery">
           <span class="when mono">2026</span>
           <h4>Adapted the converter for an EV</h4>
           <p>Port 1 (72 V) became the battery, Port 2 (48 V) the supercapacitor, and the output the EV battery. I studied performance against supercapacitor voltage in boost and buck, and made IEEE-style efficiency vs output-power plots for 400 V and 800 V in Python/Matplotlib.</p>
         </article>
 
-        <article class="step" data-step="3">
+        <article class="step" data-step="3" data-caption="STEP 4 · REAL-TIME" data-hud="OPAL-RT OP4610XG sweep">
           <span class="when mono">2026 – present</span>
           <h4>Validated it in real time on OPAL-RT</h4>
           <p>Ran the HESS model on an <b>OPAL-RT OP4610XG</b> real-time simulator and obtained results. Next is a conference paper, followed by a full-system journal manuscript, which is being written now.</p>
@@ -463,6 +491,7 @@
       <a class="btn" href="https://github.com/Devansh083" target="_blank" rel="noopener">GitHub</a>
       <a class="btn" href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a>
     </div>
+    <div class="slot3d contact-slot" id="contactSlot" aria-hidden="true"></div>
   </section>
 </main>
 
@@ -474,5 +503,14 @@
 <div class="lightbox" id="lightbox" hidden><img alt=""><button aria-label="Close">✕</button></div>
 
 <script src="assets/js/main.js"></script>
+<script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+</script>
+<script type="module" src="assets/js/board3d.js"></script>
 </body>
 </html>
