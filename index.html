@@ -2,23 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Devansh · Power Electronics</title>
   <meta name="description" content="EEE undergraduate at VIT Chennai working on power electronics for EVs, renewable energy and smart grids, from MATLAB/Simulink simulation to OPAL-RT real-time validation.">
-  <meta name="theme-color" content="#060b16">
+  <meta name="theme-color" content="#e2e4e6">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-<canvas id="three" aria-hidden="true"></canvas>
-<div class="charge" aria-hidden="true"><span id="chargeFill"></span></div>
+<!-- WebGL layer: battery, cable, converter module, supercapacitor -->
+<canvas id="cable3d" aria-hidden="true"></canvas>
 
-<!-- ================= NAV ================= -->
 <header class="nav">
-  <a class="brand" href="#top"><span class="led" aria-hidden="true"></span>devansh<span class="mono dim">.pe</span></a>
+  <a class="brand" href="#top">Devansh<span>Power electronics</span></a>
   <button class="nav-toggle" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
   <nav class="nav-links">
     <a href="#research">Research</a>
@@ -30,474 +29,312 @@
   </nav>
 </header>
 
-<main id="top">
+<main>
 
-  <!-- ================= HERO ================= -->
-  <section class="hero">
-    <div class="hero-copy">
-      <p class="tag mono"><span class="blink">●</span> B.Tech EEE · VIT Chennai · 2024–28 · CGPA 8.91</p>
-      <h1>
-        <span class="h1-small">Devansh</span>
-        Power electronics,<br>
-        <span class="grad">from simulation to real-time hardware.</span>
-      </h1>
-      <p class="lede">I model, control and validate DC-DC converters for
-        <span class="rotator" aria-live="polite"><span id="rot">electric vehicles</span></span>,
-        working from IEEE-paper replication in MATLAB/Simulink to closed-loop control on an OPAL-RT real-time simulator.</p>
-      <div class="cta">
-        <!-- TODO: add assets/resume.pdf -->
-        <a class="btn primary" href="assets/resume.pdf" target="_blank" rel="noopener">Download resume <span aria-hidden="true">↓</span></a>
-        <!-- TODO: replace with your LinkedIn URL -->
-        <a class="btn" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="btn" href="https://github.com/Devansh083" target="_blank" rel="noopener">GitHub</a>
+  <!-- ================= HERO: the battery the cable starts from ================= -->
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow mono">B.Tech Electrical &amp; Electronics · VIT Chennai · 2024–2028</p>
+        <h1 class="display">Power electronics, from simulation to real&#8209;time hardware.</h1>
+        <p class="lede">I model, control and validate DC-DC converters for electric vehicles, renewable energy and smart grids. My current work takes a multiport converter from an IEEE paper replication in MATLAB/Simulink to closed-loop control and real-time testing on OPAL-RT.</p>
+        <div class="cta">
+          <!-- TODO: add assets/resume.pdf -->
+          <a class="btn primary" href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a>
+          <!-- TODO: replace with your LinkedIn URL -->
+          <a class="btn" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn" href="https://github.com/Devansh083" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <dl class="specs">
+          <div><dt class="mono">Efficiency</dt><dd>≈98.5<small>%</small></dd><span class="mono">at 400 V, closed loop (sim)</span></div>
+          <div><dt class="mono">Match vs paper</dt><dd>1–3<small>%</small></dd><span class="mono">deviation after tuning</span></div>
+          <div><dt class="mono">HV port</dt><dd>400/800<small>V</small></dd><span class="mono">both validated</span></div>
+          <div><dt class="mono">CGPA</dt><dd>8.91</dd><span class="mono">pre-final year</span></div>
+        </dl>
+      </div>
+      <div class="obj-slot battery-slot" id="slotBattery" role="img" aria-label="3D Li-ion cell with an orange cable plugged into its positive terminal">
+        <span class="slot-note mono">21700 Li-ion · drag to spin</span>
       </div>
     </div>
-
-    <div class="hero-visual">
-      <!-- 3D converter board renders into this slot (canvas sits behind the page) -->
-      <div class="slot3d" id="heroSlot" role="img" aria-label="Interactive 3D model of a multiport power converter board">
-        <div class="hud mono">
-          <span class="hud-tl">converter_board · 3D</span>
-          <span class="hud-tr" id="heroHudState">ASSEMBLED</span>
-          <span class="hud-bl">drag to rotate</span>
-          <span class="hud-br">L1 L2 · Q1–Q4 · C<sub>o</sub></span>
-        </div>
-      </div>
-      <div class="hud-ctrl">
-        <div class="seg" role="group" aria-label="3D view">
-          <button class="on" data-view="assembled">Assembled</button>
-          <button data-view="exploded">Exploded</button>
-          <button data-view="blueprint">Blueprint</button>
-        </div>
-        <div class="seg" role="group" aria-label="Power flow">
-          <button class="on" data-flow="boost">Boost</button>
-          <button data-flow="buck">Buck</button>
-        </div>
-      </div>
-
-    <!-- Fallback when WebGL is unavailable: 2D schematic -->
-    <figure class="schem-card" aria-label="Animated schematic of an interleaved multiport bidirectional DC-DC converter">
-      <div class="schem-bar mono">
-        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-        <span class="schem-title">multiport_bidirectional.slx</span>
-      </div>
-      <svg id="schem" viewBox="0 0 540 330">
-        <defs>
-          <linearGradient id="g-bus" x1="0" x2="1"><stop offset="0" stop-color="#2dd4bf"/><stop offset="1" stop-color="#38bdf8"/></linearGradient>
-        </defs>
-
-        <!-- copper -->
-        <g class="cu">
-          <path d="M122 118 H168"/><path d="M232 118 H300 V96"/>
-          <path d="M122 228 H168"/><path d="M232 228 H370 V206"/>
-          <path d="M300 60 V40 H448"/><path d="M370 170 V40"/>
-          <path d="M300 140 V96"/><path d="M300 176 V192"/>
-          <path d="M370 250 V206"/><path d="M370 286 V300"/>
-          <path d="M420 40 V140"/><path d="M420 148 V164"/>
-          <path d="M62 143 V160"/><path d="M62 253 V270"/>
-        </g>
-
-        <!-- inductors -->
-        <g class="coil">
-          <path d="M168 118 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0"/>
-          <path d="M168 228 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0 a8 8 0 0 1 16 0"/>
-        </g>
-        <text x="200" y="100" class="lbl">L1</text>
-        <text x="200" y="210" class="lbl">L2</text>
-
-        <!-- SiC switches -->
-        <g class="sw"><rect x="288" y="60" width="24" height="36" rx="4"/><text x="300" y="83">Q1</text></g>
-        <g class="sw"><rect x="288" y="140" width="24" height="36" rx="4"/><text x="300" y="163">Q2</text></g>
-        <g class="sw"><rect x="358" y="170" width="24" height="36" rx="4"/><text x="370" y="193">Q3</text></g>
-        <g class="sw"><rect x="358" y="250" width="24" height="36" rx="4"/><text x="370" y="273">Q4</text></g>
-        <text x="230" y="300" class="lbl dim">2-phase interleaved · SiC MOSFETs</text>
-
-        <!-- output capacitor -->
-        <g class="cap"><path d="M406 140 H434"/><path d="M406 148 H434"/></g>
-        <text x="438" y="150" class="lbl">C<tspan dy="3" font-size="8">o</tspan></text>
-
-        <!-- grounds -->
-        <g class="gnd">
-          <path d="M52 160 H72 M56 165 H68 M60 170 H64"/>
-          <path d="M52 270 H72 M56 275 H68 M60 280 H64"/>
-          <path d="M290 192 H310 M294 197 H306 M298 202 H302"/>
-          <path d="M360 300 H380 M364 305 H376 M368 310 H372"/>
-          <path d="M410 164 H430 M414 169 H426 M418 174 H422"/>
-        </g>
-
-        <!-- current flow overlay -->
-        <g class="flow">
-          <path id="flowA" d="M122 118 H300 V40 H448"/>
-          <path id="flowB" d="M122 228 H370 V40 H448"/>
-        </g>
-
-        <!-- ports -->
-        <g class="port lv"><rect x="12" y="93" width="110" height="50" rx="8"/><text x="67" y="114" class="pt">PORT 1 · 72 V</text><text x="67" y="131" class="ps">Battery</text></g>
-        <g class="port lv"><rect x="12" y="203" width="110" height="50" rx="8"/><text x="67" y="224" class="pt">PORT 2 · 48 V</text><text x="67" y="241" class="ps">Supercapacitor</text></g>
-        <g class="port hv"><rect x="448" y="12" width="84" height="56" rx="8"/><text x="490" y="35" class="pt">HV PORT</text><text x="490" y="54" class="pv" id="hvLabel">400 V</text></g>
-      </svg>
-      <div class="schem-ctrl">
-        <div class="seg" role="group" aria-label="Operating mode">
-          <button class="on" data-mode="boost">Boost · LV→HV</button>
-          <button data-mode="buck">Buck · HV→LV</button>
-        </div>
-        <div class="seg" role="group" aria-label="High-voltage port">
-          <button class="on" data-hv="400">400 V</button>
-          <button data-hv="800">800 V</button>
-        </div>
-      </div>
-      <figcaption class="mono">Topology sketch after the IEEE A-DLC base paper · HESS port assignment</figcaption>
-    </figure>
-    </div>
-
-    <ul class="telemetry">
-      <li><span class="mono k">η @ 400 V</span><b><span data-count="98.5" data-dec="1">0</span><small>%</small></b><span class="v">closed-loop boost, simulation</span></li>
-      <li><span class="mono k">match vs paper</span><b>1–3<small>%</small></b><span class="v">deviation after tuning</span></li>
-      <li><span class="mono k">HV port</span><b>400 / 800<small> V</small></b><span class="v">both validated</span></li>
-      <li><span class="mono k">real-time</span><b>OP4610XG</b><span class="v">OPAL-RT validation</span></li>
-    </ul>
+    <p class="scroll-cue mono wrap">Follow the cable <span aria-hidden="true">↓</span></p>
   </section>
-
-  <div class="ticker mono" aria-hidden="true">
-    <div class="ticker-track">
-      <span>MATLAB/Simulink</span><span>Simscape Electrical</span><span>OPAL-RT</span><span>SiC MOSFETs</span><span>PI control</span><span>Interleaved converters</span><span>HESS</span><span>MPPT</span><span>ESP32</span><span>TensorFlow Lite</span><span>Python · Matplotlib</span>
-      <span>MATLAB/Simulink</span><span>Simscape Electrical</span><span>OPAL-RT</span><span>SiC MOSFETs</span><span>PI control</span><span>Interleaved converters</span><span>HESS</span><span>MPPT</span><span>ESP32</span><span>TensorFlow Lite</span><span>Python · Matplotlib</span>
-    </div>
-  </div>
 
   <!-- ================= RESEARCH ================= -->
   <section id="research" class="section">
-    <header class="sec-head">
-      <p class="kicker mono">01 / Featured research</p>
-      <h2>From an IEEE paper to a real-time EV energy-storage system</h2>
-      <p class="sec-sub">Research Intern, Centre for Smart Grid Technologies, VIT Chennai · Mar 2026 – present</p>
-    </header>
+    <div class="wrap lane-wrap lane-right">
+      <div class="content">
+        <header class="sec-head">
+          <p class="kicker mono">Featured research</p>
+          <h2>From an IEEE paper to a real-time EV energy-storage system</h2>
+          <p class="sec-sub">Research Intern, Centre for Smart Grid Technologies, VIT Chennai · Mar 2026 – present</p>
+        </header>
 
-    <div class="story">
-      <!-- sticky visual -->
-      <div class="stage-wrap">
-        <div class="stage" id="stage">
-          <div class="hud mono">
-            <span class="hud-tl" id="stageCaption">STEP 1 · REPLICATE</span>
-            <span class="hud-tr"><i class="rec"></i>LIVE</span>
-            <span class="hud-bl" id="stageMode">blueprint · simulation</span>
-          </div>
-          <!-- 0: replication -->
-          <svg class="scene on" data-scene="0" viewBox="0 0 400 300" role="img" aria-label="Replication: IEEE base paper to Simulink model, open-loop buck and boost">
-            <g class="bx"><rect x="20" y="40" width="110" height="64" rx="10"/><text x="75" y="68">IEEE Trans.</text><text x="75" y="86" class="s">A-DLC base paper</text></g>
-            <g class="bx hi"><rect x="150" y="40" width="110" height="64" rx="10"/><text x="205" y="68">Simulink</text><text x="205" y="86" class="s">Simscape model</text></g>
-            <g class="bx"><rect x="280" y="20" width="100" height="44" rx="10"/><text x="330" y="47">Buck · OL</text></g>
-            <g class="bx"><rect x="280" y="80" width="100" height="44" rx="10"/><text x="330" y="107">Boost · OL</text></g>
-            <g class="ln"><path d="M130 72 H150"/><path d="M260 60 L280 42"/><path d="M260 84 L280 102"/></g>
-            <g class="spec mono"><text x="20" y="160">72 V / 48 V  →  400 V / 800 V</text><text x="20" y="184">interleaved · SiC MOSFETs</text><text x="20" y="208" class="acc">buck open-loop η ≈ 98%</text><text x="20" y="232" class="dimt">boost: debugged for losses</text></g>
-            <text x="20" y="282" class="cap mono">STEP 1 · REPLICATE</text>
-          </svg>
-          <!-- 1: closed loop -->
-          <svg class="scene" data-scene="1" viewBox="0 0 400 300" role="img" aria-label="Closed loop: reference, PI controller, limiter, duty cycle, converter, feedback">
-            <g class="bx"><rect x="10" y="70" width="56" height="40" rx="8"/><text x="38" y="95">V<tspan class="s" dy="3">ref</tspan></text></g>
-            <circle class="sum" cx="96" cy="90" r="14"/><text x="96" y="95" class="sumt">Σ</text>
-            <g class="bx hi"><rect x="126" y="70" width="56" height="40" rx="8"/><text x="154" y="95">PI</text></g>
-            <g class="bx"><rect x="200" y="70" width="64" height="40" rx="8"/><text x="232" y="88">Limit</text><text x="232" y="102" class="s">D<tspan dy="2" font-size="7">min/max</tspan></text></g>
-            <g class="bx"><rect x="282" y="62" width="104" height="56" rx="8"/><text x="334" y="86">Converter</text><text x="334" y="102" class="s">boost mode</text></g>
-            <g class="ln"><path d="M66 90 H82"/><path d="M110 90 H126"/><path d="M182 90 H200"/><path d="M264 90 H282"/><path d="M334 118 V160 H96 V104"/></g>
-            <text x="200" y="176" class="s mid">V<tspan dy="2" font-size="7">out</tspan> feedback</text>
-            <text x="104" y="114" class="s">−</text>
-            <g class="spec mono"><text x="20" y="214" class="acc">η ≈ 98.5% @ 400 V</text><text x="20" y="238">800 V operation validated</text><text x="20" y="262" class="dimt">within ~1–3% of the base paper</text></g>
-            <text x="20" y="290" class="cap mono">STEP 2 · CLOSE THE LOOP</text>
-          </svg>
-          <!-- 2: HESS -->
-          <svg class="scene" data-scene="2" viewBox="0 0 400 300" role="img" aria-label="HESS: 72 V battery and 48 V supercapacitor feed the converter, output to the EV battery">
-            <g class="bx"><rect x="16" y="36" width="116" height="56" rx="10"/><text x="74" y="60">Battery</text><text x="74" y="78" class="s">Port 1 · 72 V</text></g>
-            <g class="bx"><rect x="16" y="128" width="116" height="56" rx="10"/><text x="74" y="152">Supercap</text><text x="74" y="170" class="s">Port 2 · 48 V</text></g>
-            <g class="bx hi"><rect x="168" y="70" width="100" height="80" rx="12"/><text x="218" y="104">Multiport</text><text x="218" y="122" class="s">bidirectional</text></g>
-            <g class="bx"><rect x="300" y="82" width="86" height="56" rx="10"/><text x="343" y="106">Battery</text><text x="343" y="124" class="s">EV · HV side</text></g>
-            <g class="ln flowl"><path d="M132 64 H150 V96 H168"/><path d="M132 156 H150 V124 H168"/><path d="M268 110 H300"/></g>
-            <g class="spec mono"><text x="16" y="226">sweep: supercapacitor voltage</text><text x="16" y="250" class="acc">η vs P_out · 400 V &amp; 800 V</text></g>
-            <text x="16" y="286" class="cap mono">STEP 3 · ADAPT FOR EVs</text>
-          </svg>
-          <!-- 3: OPAL-RT -->
-          <svg class="scene" data-scene="3" viewBox="0 0 400 300" role="img" aria-label="Real-time: Simulink model compiled and run on an OPAL-RT OP4610XG">
-            <g class="bx"><rect x="16" y="50" width="110" height="56" rx="10"/><text x="71" y="74">Simulink</text><text x="71" y="92" class="s">HESS model</text></g>
-            <g class="ln"><path d="M126 78 H164"/></g>
-            <g class="rack">
-              <rect x="164" y="30" width="216" height="104" rx="10"/>
-              <rect x="180" y="46" width="120" height="14" rx="3" class="slot"/><rect x="180" y="68" width="120" height="14" rx="3" class="slot"/><rect x="180" y="90" width="120" height="14" rx="3" class="slot"/>
-              <circle cx="320" cy="53" r="4" class="ledg"/><circle cx="336" cy="53" r="4" class="ledg d2"/><circle cx="352" cy="53" r="4" class="ledg d3"/>
-              <text x="272" y="124" class="s mid">OPAL-RT OP4610XG</text>
-            </g>
-            <polyline class="rt-wave" points="16,200 40,200 40,176 64,176 64,200 88,200 88,176 112,176 112,200 136,200 136,176 160,176 160,200 184,200 184,176 208,176 208,200 232,200 232,176 256,176 256,200 280,200 280,176 304,176 304,200 328,200 328,176 352,176 352,200 384,200"/>
-            <g class="spec mono"><text x="16" y="240" class="acc">real-time results obtained</text><text x="16" y="264" class="dimt">conference paper → full-system journal</text></g>
-            <text x="16" y="292" class="cap mono">STEP 4 · REAL-TIME VALIDATION</text>
-          </svg>
-        </div>
-      </div>
-
-      <!-- steps -->
-      <div class="steps">
-        <article class="proj-head">
+        <article class="proj">
           <span class="badge ready">Results ready, paper pending</span>
           <h3>Multiport Bidirectional DC-DC Converter with A-DLC Control</h3>
           <p>Asymmetrical Duty-Cycle Limit Control on an interleaved, SiC-based converter with 72 V / 48 V low-voltage ports and a 400 V / 800 V high-voltage port, after an IEEE Transactions base paper.</p>
+          <ol class="steps">
+            <li>
+              <span class="when mono">Mar – May 2026</span>
+              <h4>Replicated the base paper in MATLAB/Simulink</h4>
+              <p>Built the full converter in Simscape Electrical. Open-loop buck mode reached about <b>98% efficiency</b>. In boost mode I traced and fixed the loss sources until the model behaved like the paper.</p>
+            </li>
+            <li>
+              <span class="when mono">Summer 2026 · internship</span>
+              <h4>Designed the closed-loop boost controller</h4>
+              <p>Duty-cycle determination, PI voltage/current loops and limiters, tuned until results matched the paper within <b>~1–3%</b>. About <b>98.5% efficiency at 400 V</b>, with <b>800 V</b> operation also validated. All open- and closed-loop data is logged in Excel.</p>
+            </li>
+          </ol>
         </article>
 
-        <article class="step" data-step="0" data-caption="STEP 1 · REPLICATE" data-hud="blueprint · simulation">
-          <span class="when mono">Mar – May 2026</span>
-          <h4>Replicated the base paper in MATLAB/Simulink</h4>
-          <p>Built the full converter in Simscape Electrical. Open-loop buck mode reached about <b>98% efficiency</b>. In boost mode I traced and debugged the loss sources until the model behaved like the paper.</p>
-        </article>
-
-        <article class="step" data-step="1" data-caption="STEP 2 · CLOSE THE LOOP" data-hud="controller + switches active">
-          <span class="when mono">Summer 2026 · internship</span>
-          <h4>Designed the closed-loop boost controller</h4>
-          <p>Duty-cycle determination, PI voltage/current loops and limiters, tuned until results matched the paper within <b>~1–3%</b>. Reached about <b>98.5% efficiency at 400 V</b> and validated <b>800 V</b> operation. All open- and closed-loop data is logged in Excel.</p>
-        </article>
-
-        <article class="proj-head second">
+        <article class="proj">
           <span class="badge ready">Results ready, paper pending</span>
           <h3>Battery + Supercapacitor Hybrid Energy Storage (EV setup)</h3>
-          <p>The same converter, re-architected as a HESS for an EV environment.</p>
+          <p>The same converter, re-architected as a HESS for an EV. The cable on this page runs the same way, from the battery to the supercapacitor.</p>
+          <ol class="steps">
+            <li>
+              <span class="when mono">2026</span>
+              <h4>Adapted the converter for an EV</h4>
+              <p>Port 1 (72 V) became the battery, Port 2 (48 V) the supercapacitor, and the output the EV battery. I studied performance against supercapacitor voltage in boost and buck, and made IEEE-style efficiency vs output-power plots for 400 V and 800 V in Python/Matplotlib.</p>
+            </li>
+            <li>
+              <span class="when mono">2026 – present</span>
+              <h4>Validated it in real time on OPAL-RT</h4>
+              <p>Ran the HESS model on an <b>OPAL-RT OP4610XG</b> real-time simulator and obtained results. Next is a conference paper, then a full-system journal manuscript, which is being written now.</p>
+            </li>
+          </ol>
+          <ul class="chips mono"><li>MATLAB/Simulink</li><li>Simscape Electrical</li><li>PI control</li><li>OPAL-RT</li><li>Python · Matplotlib</li></ul>
         </article>
 
-        <article class="step" data-step="2" data-caption="STEP 3 · ADAPT FOR EVs" data-hud="battery + supercap → EV battery">
-          <span class="when mono">2026</span>
-          <h4>Adapted the converter for an EV</h4>
-          <p>Port 1 (72 V) became the battery, Port 2 (48 V) the supercapacitor, and the output the EV battery. I studied performance against supercapacitor voltage in boost and buck, and made IEEE-style efficiency vs output-power plots for 400 V and 800 V in Python/Matplotlib.</p>
-        </article>
-
-        <article class="step" data-step="3" data-caption="STEP 4 · REAL-TIME" data-hud="OPAL-RT OP4610XG sweep">
-          <span class="when mono">2026 – present</span>
-          <h4>Validated it in real time on OPAL-RT</h4>
-          <p>Ran the HESS model on an <b>OPAL-RT OP4610XG</b> real-time simulator and obtained results. Next is a conference paper, followed by a full-system journal manuscript, which is being written now.</p>
-          <ul class="chips"><li>MATLAB/Simulink</li><li>Simscape</li><li>PI control</li><li>OPAL-RT</li><li>Matplotlib</li></ul>
-        </article>
+        <div class="gallery-head">
+          <h3>Results</h3>
+          <p class="mono">Click a plot to enlarge</p>
+        </div>
+        <div class="gallery">
+          <!-- Drop real figures into assets/img/ with these names; missing ones show a labelled empty frame. -->
+          <figure class="shot wide"><img src="assets/img/efficiency-400v.png" alt="Efficiency vs output power at 400 V" data-file="efficiency-400v.png"><figcaption>Efficiency vs output power · 400 V</figcaption></figure>
+          <figure class="shot"><img src="assets/img/efficiency-800v.png" alt="Efficiency vs output power at 800 V" data-file="efficiency-800v.png"><figcaption>Efficiency vs output power · 800 V</figcaption></figure>
+          <figure class="shot"><img src="assets/img/closed-loop-response.png" alt="Closed-loop boost response compared with the base paper" data-file="closed-loop-response.png"><figcaption>Closed-loop boost vs base paper</figcaption></figure>
+          <figure class="shot"><img src="assets/img/sc-voltage-study.png" alt="Performance versus supercapacitor voltage, boost and buck" data-file="sc-voltage-study.png"><figcaption>Performance vs supercapacitor voltage</figcaption></figure>
+          <figure class="shot"><img src="assets/img/opal-rt-setup.jpg" alt="OPAL-RT OP4610XG real-time setup" data-file="opal-rt-setup.jpg"><figcaption>OPAL-RT OP4610XG setup</figcaption></figure>
+        </div>
       </div>
-    </div>
-
-    <!-- results gallery -->
-    <div class="gallery-head">
-      <h3>Results</h3>
-      <p class="mono dim">click a plot to enlarge</p>
-    </div>
-    <div class="gallery">
-      <!-- Drop real figures into assets/img/ with these names; missing ones show a "no signal" screen. -->
-      <figure class="shot wide"><img src="assets/img/efficiency-400v.png" alt="Efficiency vs output power at 400 V" data-file="efficiency-400v.png"><figcaption>Efficiency vs output power · 400 V</figcaption></figure>
-      <figure class="shot"><img src="assets/img/efficiency-800v.png" alt="Efficiency vs output power at 800 V" data-file="efficiency-800v.png"><figcaption>Efficiency vs output power · 800 V</figcaption></figure>
-      <figure class="shot"><img src="assets/img/closed-loop-response.png" alt="Closed-loop boost response compared with the base paper" data-file="closed-loop-response.png"><figcaption>Closed-loop boost vs base paper</figcaption></figure>
-      <figure class="shot"><img src="assets/img/sc-voltage-study.png" alt="Performance versus supercapacitor voltage, boost and buck" data-file="sc-voltage-study.png"><figcaption>Performance vs supercapacitor voltage</figcaption></figure>
-      <figure class="shot"><img src="assets/img/opal-rt-setup.jpg" alt="OPAL-RT OP4610XG real-time setup" data-file="opal-rt-setup.jpg"><figcaption>OPAL-RT OP4610XG setup</figcaption></figure>
+      <div class="lane" aria-hidden="true">
+        <div class="obj-slot module-slot" id="slotModule">
+          <span class="slot-note mono" id="moduleNote">Multiport converter · no input</span>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- ================= BENCH (interactive) ================= -->
+  <!-- ================= BENCH ================= -->
   <section id="bench" class="section">
-    <header class="sec-head">
-      <p class="kicker mono">02 / Bench</p>
-      <h2>Why interleaving? Try it.</h2>
-      <p class="sec-sub">My converter interleaves its phases. Drag the duty cycle and switch between one and two phases to see how the ripple cancels. These are ideal, lossless textbook waveforms, not my measured results.</p>
-    </header>
-
-    <div class="bench">
-      <div class="scope">
-        <div class="scope-top mono">
-          <span><i class="c1"></i>gate</span><span><i class="c2"></i>i<sub>L1</sub></span><span class="ph2"><i class="c3"></i>i<sub>L2</sub></span><span><i class="c4"></i>i<sub>in</sub> total</span>
-          <span class="trig">TRIG ▲ · RUN</span>
-        </div>
-        <canvas id="benchScope" width="760" height="380"></canvas>
-      </div>
-      <div class="knobs">
-        <label class="knob">
-          <span class="mono k">Duty cycle D</span>
-          <input type="range" id="duty" min="0.1" max="0.9" step="0.01" value="0.62">
-          <output class="mono" id="dutyOut">0.62</output>
-        </label>
-        <div class="knob">
-          <span class="mono k">Low-voltage port</span>
-          <div class="seg small" role="group" aria-label="Input voltage">
-            <button class="on" data-vin="72">72 V</button><button data-vin="48">48 V</button>
+    <div class="wrap lane-wrap lane-left">
+      <div class="content">
+        <header class="sec-head">
+          <p class="kicker mono">Bench</p>
+          <h2>Why interleave? Try it.</h2>
+          <p class="sec-sub">My converter runs two phases 180° apart. Drag the duty cycle and switch between one and two phases to see the input ripple cancel. These are ideal, lossless textbook waveforms, not my measured results.</p>
+        </header>
+        <div class="bench">
+          <div class="scope">
+            <div class="scope-top mono">
+              <span><i class="c1"></i>Gate</span><span><i class="c2"></i>i<sub>L1</sub></span><span class="ph2"><i class="c3"></i>i<sub>L2</sub></span><span><i class="c4"></i>i<sub>in</sub></span>
+            </div>
+            <canvas id="benchScope" width="760" height="380"></canvas>
+          </div>
+          <div class="knobs">
+            <label class="knob" for="duty">
+              <span class="mono k">Duty cycle D</span>
+              <input type="range" id="duty" min="0.1" max="0.9" step="0.01" value="0.62">
+              <output class="mono" id="dutyOut" for="duty">0.62</output>
+            </label>
+            <div class="knob">
+              <span class="mono k">Low-voltage port</span>
+              <div class="seg" role="group" aria-label="Input voltage">
+                <button class="on" data-vin="72">72 V</button><button data-vin="48">48 V</button>
+              </div>
+            </div>
+            <div class="knob">
+              <span class="mono k">Phases</span>
+              <div class="seg" role="group" aria-label="Phases">
+                <button data-ph="1">1 phase</button><button class="on" data-ph="2">2 interleaved</button>
+              </div>
+            </div>
+            <dl class="readout mono">
+              <div><dt>Ideal gain 1/(1−D)</dt><dd id="gain">2.63×</dd></div>
+              <div><dt>Ideal V<sub>out</sub></dt><dd id="vout">189 V</dd></div>
+              <div><dt>Input ripple vs 1-phase</dt><dd id="ripple">—</dd></div>
+            </dl>
           </div>
         </div>
-        <div class="knob">
-          <span class="mono k">Phases</span>
-          <div class="seg small" role="group" aria-label="Phases">
-            <button data-ph="1">1 phase</button><button class="on" data-ph="2">2 interleaved</button>
-          </div>
-        </div>
-        <dl class="readout mono">
-          <div><dt>Ideal gain 1/(1−D)</dt><dd id="gain">2.63×</dd></div>
-          <div><dt>Ideal V<sub>out</sub></dt><dd id="vout">189 V</dd></div>
-          <div><dt>Input ripple vs 1-phase</dt><dd id="ripple">—</dd></div>
-        </dl>
       </div>
+      <div class="lane" aria-hidden="true"></div>
     </div>
   </section>
 
   <!-- ================= PROJECTS ================= -->
   <section id="projects" class="section">
-    <header class="sec-head">
-      <p class="kicker mono">03 / Projects</p>
-      <h2>Embedded, sensing, analog and coursework</h2>
-    </header>
+    <div class="wrap lane-wrap lane-right">
+      <div class="content">
+        <header class="sec-head">
+          <p class="kicker mono">Projects</p>
+          <h2>Embedded, sensing, analog and coursework</h2>
+        </header>
 
-    <div class="filters" role="group" aria-label="Filter projects by status">
-      <button class="on" data-filter="all">All</button>
-      <button data-filter="completed"><i class="sd completed"></i>Completed</button>
-      <button data-filter="progress"><i class="sd progress"></i>In progress</button>
-      <button data-filter="planned"><i class="sd planned"></i>Planned / idea</button>
-    </div>
+        <div class="filters" role="group" aria-label="Filter projects by status">
+          <button class="on" data-filter="all">All</button>
+          <button data-filter="completed"><i class="sd completed"></i>Completed</button>
+          <button data-filter="progress"><i class="sd progress"></i>In progress</button>
+          <button data-filter="planned"><i class="sd planned"></i>Planned / idea</button>
+        </div>
 
-    <div class="grid">
-      <article class="card big" data-status="completed">
-        <div class="card-top">
-          <svg class="ico" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/><path d="M9 12h2l1-2 1 4 1-2h1"/></svg>
-          <span class="badge completed">Completed</span>
-        </div>
-        <p class="cat mono">Embedded · Sensing · Applied ML</p>
-        <h3>ESP32 Solar Panel Health Monitor</h3>
-        <p>An ESP32 with a BH1750 light sensor, a 0–25 V voltage sensor, a DHT22 and an OLED. A threshold-based health model compares irradiance with expected panel voltage and applies temperature derating. A multi-page OLED UI shows maintenance messages.</p>
-        <p>I logged a labelled dataset and trained a feed-forward neural network, which I exported to TensorFlow Lite and a C header. <b>The rules make the decisions; the network supports and validates them.</b></p>
-        <div class="metric-row">
-          <div><b class="mono">≈89.7%</b><span>NN test accuracy</span></div>
-          <div><b class="mono">4</b><span>sensors + OLED UI</span></div>
-          <div><b class="mono">TFLite</b><span>exported to C header</span></div>
-        </div>
-        <p class="note mono">prototype · on-device ML optional</p>
-        <ul class="chips"><li>ESP32</li><li>BH1750</li><li>DHT22</li><li>TensorFlow/Keras</li><li>TFLite</li></ul>
-      </article>
+        <div class="grid">
+          <article class="card big" data-status="completed">
+            <div class="card-top"><p class="cat mono">Embedded · Sensing · Applied ML</p><span class="badge completed">Completed</span></div>
+            <h3>ESP32 Solar Panel Health Monitor</h3>
+            <p>An ESP32 with a BH1750 light sensor, a 0–25 V voltage sensor, a DHT22 and an OLED. A threshold-based health model compares irradiance with expected panel voltage and applies temperature derating. A multi-page OLED UI shows maintenance messages.</p>
+            <p>I logged a labelled dataset and trained a feed-forward neural network, exported to TensorFlow Lite and a C header. <b>The rules make the decisions; the network supports and validates them.</b></p>
+            <dl class="metric-row">
+              <div><dt class="mono">NN test accuracy</dt><dd>≈89.7%</dd></div>
+              <div><dt class="mono">Inputs</dt><dd>4 sensors</dd></div>
+              <div><dt class="mono">Export</dt><dd>TFLite → C</dd></div>
+            </dl>
+            <p class="note mono">Prototype · on-device ML optional</p>
+            <ul class="chips mono"><li>ESP32</li><li>BH1750</li><li>DHT22</li><li>TensorFlow/Keras</li><li>TFLite</li></ul>
+          </article>
 
-      <article class="card" data-status="completed">
-        <div class="card-top">
-          <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>
-          <span class="badge completed">Completed</span>
-        </div>
-        <p class="cat mono">Renewables · Control</p>
-        <h3>Photovoltaic MPPT Algorithm Optimisation</h3>
-        <p>MATLAB/Simulink comparison of Perturb &amp; Observe and Incremental Conductance under an irradiance step: how fast each one tracks and how it behaves in steady state.</p>
-        <!-- TODO: add confirmed numbers from your resume (tracking time, efficiency) -->
-        <ul class="chips"><li>MATLAB/Simulink</li><li>P&amp;O</li><li>InC</li></ul>
-      </article>
+          <article class="card" data-status="completed">
+            <div class="card-top"><p class="cat mono">Renewables · Control</p><span class="badge completed">Completed</span></div>
+            <h3>Photovoltaic MPPT Algorithm Optimisation</h3>
+            <p>MATLAB/Simulink comparison of Perturb &amp; Observe and Incremental Conductance under an irradiance step: how fast each one tracks and how it behaves in steady state.</p>
+            <!-- TODO: add confirmed numbers from your resume (tracking time, efficiency) -->
+            <ul class="chips mono"><li>MATLAB/Simulink</li><li>P&amp;O</li><li>InC</li></ul>
+          </article>
 
-      <article class="card" data-status="completed">
-        <div class="card-top">
-          <svg class="ico" viewBox="0 0 24 24"><path d="M2 12h3l2-6 3 12 3-9 2 5 2-2h5"/></svg>
-          <span class="badge completed">Completed</span>
-        </div>
-        <p class="cat mono">Analog design · Aug–Oct 2025</p>
-        <h3>Piezoelectric Vibration Sensor Interface</h3>
-        <p>A UA741 charge amplifier on a single 5 V supply with a 2.5 V virtual ground. A high-pass filter at <b>72.3 Hz</b> removes drift, and an Arduino ADC reads the output.</p>
-        <ul class="chips"><li>Op-amps</li><li>Filter design</li><li>Arduino</li></ul>
-      </article>
+          <article class="card" data-status="completed">
+            <div class="card-top"><p class="cat mono">Analog design · Aug–Oct 2025</p><span class="badge completed">Completed</span></div>
+            <h3>Piezoelectric Vibration Sensor Interface</h3>
+            <p>A UA741 charge amplifier on a single 5 V supply with a 2.5 V virtual ground. A high-pass filter at <b>72.3 Hz</b> removes drift, and an Arduino ADC reads the output.</p>
+            <ul class="chips mono"><li>Op-amps</li><li>Filter design</li><li>Arduino</li></ul>
+          </article>
 
-      <article class="card wide" data-status="progress">
-        <div class="card-top">
-          <svg class="ico" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3z"/><path d="m13 7-3 5h4l-3 5"/></svg>
-          <span class="badge progress">In progress</span>
-        </div>
-        <p class="cat mono">Course project · MPMC · simulation stage</p>
-        <h3>Smart Earth Leakage Monitoring System</h3>
-        <p>A MATLAB/Simulink comparison of two residual-current sensing methods, including the trip chain (RMS → comparator → relay delay → breaker). I've reviewed and corrected the model several times. Hardware is out of scope for now.</p>
-        <div class="vs">
-          <div><span class="mono k">Method 1</span>One ZCT-type core-balance sensor (direct residual)</div>
-          <div class="vs-x mono">vs</div>
-          <div><span class="mono k">Method 2</span>Two independent ACS-type sensors with a computed difference</div>
-        </div>
-        <p class="note mono">comparing: sensitivity · minimum detectable leakage · trip time</p>
-      </article>
+          <article class="card big" data-status="progress">
+            <div class="card-top"><p class="cat mono">Course project · MPMC · simulation stage</p><span class="badge progress">In progress</span></div>
+            <h3>Smart Earth Leakage Monitoring System</h3>
+            <p>A MATLAB/Simulink comparison of two residual-current sensing methods, including the trip chain (RMS → comparator → relay delay → breaker). I've reviewed and corrected the model several times. Hardware is out of scope for now.</p>
+            <div class="vs">
+              <div><span class="mono k">Method 1</span>One ZCT-type core-balance sensor (direct residual)</div>
+              <div class="vs-x mono">vs</div>
+              <div><span class="mono k">Method 2</span>Two independent ACS-type sensors with a computed difference</div>
+            </div>
+            <p class="note mono">Comparing sensitivity, minimum detectable leakage and trip time</p>
+          </article>
 
-      <article class="card" data-status="planned">
-        <div class="card-top">
-          <svg class="ico" viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 10v4"/><path d="M6 12h2l1-2 2 4 1-2h2"/></svg>
-          <span class="badge planned">Planned / idea</span>
-        </div>
-        <p class="cat mono">DSP · presentation stage</p>
-        <h3>Battery Health Determination using DSP</h3>
-        <p>A planned DSP pipeline to classify Li-ion cells as healthy, moderately degraded or degraded. So far the project flow exists as a presentation; nothing has been implemented yet.</p>
-        <ul class="chips"><li>DSP</li><li>Battery health</li></ul>
-      </article>
+          <article class="card" data-status="planned">
+            <div class="card-top"><p class="cat mono">DSP · presentation stage</p><span class="badge planned">Planned / idea</span></div>
+            <h3>Battery Health Determination using DSP</h3>
+            <p>A planned DSP pipeline to classify Li-ion cells as healthy, moderately degraded or degraded. So far the project flow exists as a presentation; nothing is implemented yet.</p>
+            <ul class="chips mono"><li>DSP</li><li>Battery health</li></ul>
+          </article>
 
-      <article class="card" data-status="planned">
-        <div class="card-top">
-          <svg class="ico" viewBox="0 0 24 24"><path d="M2 13h4l2-5 3 10 3-14 2 9h6"/></svg>
-          <span class="badge planned">Planned / idea</span>
+          <article class="card" data-status="planned">
+            <div class="card-top"><p class="cat mono">Biomedical analog · literature review done</p><span class="badge planned">Planned / idea</span></div>
+            <h3>Adaptive Driven-Right-Leg Circuit for Wearable ECG</h3>
+            <p>I wrote an IEEE-style literature review (~37 references) on adaptive DRL for common-mode rejection in wearables. Circuit design and testing come next.</p>
+            <ul class="chips mono"><li>Instrumentation</li><li>ECG front-end</li></ul>
+          </article>
+          <!-- TODO: ML Smart Room Occupancy, add once described -->
         </div>
-        <p class="cat mono">Biomedical analog · literature review done</p>
-        <h3>Adaptive Driven-Right-Leg Circuit for Wearable ECG</h3>
-        <p>I wrote an IEEE-style literature review (~37 references) on adaptive DRL for common-mode rejection in wearables. Circuit design and testing come next.</p>
-        <ul class="chips"><li>Instrumentation</li><li>ECG front-end</li></ul>
-      </article>
-      <!-- TODO: ML Smart Room Occupancy, add once described -->
+      </div>
+      <div class="lane" aria-hidden="true"></div>
     </div>
   </section>
 
   <!-- ================= EXPERIENCE ================= -->
   <section id="experience" class="section">
-    <header class="sec-head">
-      <p class="kicker mono">04 / Experience</p>
-      <h2>Research Intern, Centre for Smart Grid Technologies</h2>
-      <p class="sec-sub">VIT Chennai · Mar 2026 – present</p>
-    </header>
-    <ol class="tl">
-      <li><span class="mono when">Mar – May 2026</span><h4>Base-paper replication</h4><p>IEEE A-DLC multiport converter rebuilt in MATLAB/Simulink, with open-loop buck (~98% η) and boost.</p></li>
-      <li><span class="mono when">Summer 2026</span><h4>Closed-loop control</h4><p>PI loops, limiters and duty-cycle logic. Matched the paper within ~1–3%, with ~98.5% η at 400 V and 800 V validated.</p></li>
-      <li><span class="mono when">2026</span><h4>HESS + OPAL-RT</h4><p>Battery/supercapacitor EV architecture validated on an OP4610XG real-time simulator.</p></li>
-      <li class="now"><span class="mono when">Now</span><h4>Writing it up</h4><p>Conference paper and a full-system journal manuscript in preparation.</p></li>
-    </ol>
+    <div class="wrap lane-wrap lane-left">
+      <div class="content">
+        <header class="sec-head">
+          <p class="kicker mono">Experience</p>
+          <h2>Research Intern, Centre for Smart Grid Technologies</h2>
+          <p class="sec-sub">VIT Chennai · Mar 2026 – present</p>
+        </header>
+        <ol class="tl">
+          <li><span class="mono when">Mar – May 2026</span><div><h4>Base-paper replication</h4><p>IEEE A-DLC multiport converter rebuilt in MATLAB/Simulink, with open-loop buck (~98% η) and boost.</p></div></li>
+          <li><span class="mono when">Summer 2026</span><div><h4>Closed-loop control</h4><p>PI loops, limiters and duty-cycle logic. Matched the paper within ~1–3%, with ~98.5% η at 400 V and 800 V validated.</p></div></li>
+          <li><span class="mono when">2026</span><div><h4>HESS + OPAL-RT</h4><p>Battery/supercapacitor EV architecture validated on an OP4610XG real-time simulator.</p></div></li>
+          <li class="now"><span class="mono when">Now</span><div><h4>Writing it up</h4><p>Conference paper and a full-system journal manuscript in preparation.</p></div></li>
+        </ol>
+      </div>
+      <div class="lane" aria-hidden="true"></div>
+    </div>
   </section>
 
   <!-- ================= SKILLS ================= -->
   <section id="skills" class="section">
-    <header class="sec-head">
-      <p class="kicker mono">05 / Skills &amp; tools</p>
-      <h2>What I actually use</h2>
-    </header>
-    <div class="skills">
-      <div class="panel">
-        <h3><span class="meter m5"><i></i><i></i><i></i><i></i><i></i></span>Strong</h3>
-        <ul>
-          <li>MATLAB/Simulink · Simscape Electrical</li>
-          <li>Converter modelling &amp; closed-loop control</li>
-          <li>OPAL-RT real-time simulation</li>
-          <li>Python · Matplotlib (IEEE-style plots)</li>
-          <li>Excel data logging &amp; analysis</li>
-        </ul>
+    <div class="wrap lane-wrap lane-right">
+      <div class="content">
+        <header class="sec-head">
+          <p class="kicker mono">Skills &amp; tools</p>
+          <h2>What I actually use</h2>
+        </header>
+        <div class="skills">
+          <div class="panel">
+            <h3>Strong</h3>
+            <ul>
+              <li>MATLAB/Simulink · Simscape Electrical</li>
+              <li>Converter modelling &amp; closed-loop control</li>
+              <li>OPAL-RT real-time simulation</li>
+              <li>Python · Matplotlib (IEEE-style plots)</li>
+              <li>Excel data logging &amp; analysis</li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3>Working</h3>
+            <ul>
+              <li>ESP32 / Arduino</li>
+              <li>Analog circuit design</li>
+              <li>TensorFlow / Keras (basic)</li>
+              <li>8051 assembly (coursework)</li>
+            </ul>
+          </div>
+          <div class="panel edu">
+            <h3>Education</h3>
+            <p class="edu-deg">B.Tech, Electrical &amp; Electronics Engineering</p>
+            <p class="muted">Vellore Institute of Technology, Chennai</p>
+            <div class="edu-row mono"><span>2024 – 2028</span><span>CGPA 8.91</span></div>
+            <!-- TODO: IEEE / Enactus roles once confirmed -->
+          </div>
+        </div>
+        <!-- TODO: LTspice, LabVIEW, ModelSim, Verilog, HOMER, C/C++ only once confirmed -->
       </div>
-      <div class="panel">
-        <h3><span class="meter m3"><i></i><i></i><i></i><i></i><i></i></span>Working</h3>
-        <ul>
-          <li>ESP32 / Arduino</li>
-          <li>Analog circuit design</li>
-          <li>TensorFlow / Keras (basic)</li>
-          <li>8051 assembly (coursework)</li>
-        </ul>
-      </div>
-      <div class="panel edu">
-        <h3>Education</h3>
-        <p class="edu-deg">B.Tech, Electrical &amp; Electronics Engineering</p>
-        <p class="dim">Vellore Institute of Technology, Chennai</p>
-        <div class="edu-row mono"><span>2024 – 2028</span><span class="acc">CGPA 8.91</span></div>
-        <!-- TODO: IEEE / Enactus roles once confirmed -->
-      </div>
+      <div class="lane" aria-hidden="true"></div>
     </div>
-    <!-- TODO: LTspice, LabVIEW, ModelSim, Verilog, HOMER, C/C++ only once confirmed -->
   </section>
 
-  <!-- ================= CONTACT ================= -->
+  <!-- ================= CONTACT: the cable ends at the supercapacitor ================= -->
   <section id="contact" class="section contact">
-    <p class="kicker mono">06 / Contact</p>
-    <h2 class="big">Looking for Summer 2027 internships<br><span class="grad">in electrical core, EV &amp; energy.</span></h2>
-    <div class="cta">
-      <!-- TODO: replace with your public email -->
-      <a class="btn primary" href="mailto:your.email@example.com">Email me</a>
-      <a class="btn" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
-      <a class="btn" href="https://github.com/Devansh083" target="_blank" rel="noopener">GitHub</a>
-      <a class="btn" href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <div class="wrap contact-wrap">
+      <p class="kicker mono">Contact</p>
+      <h2 class="display">Looking for Summer 2027 internships in electrical core, EV and energy.</h2>
+      <div class="cta">
+        <!-- TODO: replace with your public email -->
+        <a class="btn primary" href="mailto:your.email@example.com">Email me</a>
+        <a class="btn" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://github.com/Devansh083" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn" href="assets/resume.pdf" target="_blank" rel="noopener">Resume</a>
+      </div>
+      <div class="obj-slot cap-slot" id="slotCap" role="img" aria-label="3D supercapacitor the cable plugs into">
+        <p class="link-status mono" id="linkStatus"><i></i><span>Port 2 · supercapacitor · not connected</span></p>
+      </div>
     </div>
-    <div class="slot3d contact-slot" id="contactSlot" aria-hidden="true"></div>
   </section>
 </main>
 
-<footer class="footer mono">
+<footer class="footer mono wrap">
   <span>© <span id="year"></span> Devansh</span>
-  <span>V<sub>bus</sub> nominal · all systems green <span class="led sm"></span></span>
+  <span>Battery → converter → supercapacitor</span>
 </footer>
 
 <div class="lightbox" id="lightbox" hidden><img alt=""><button aria-label="Close">✕</button></div>
@@ -511,6 +348,6 @@
     }
   }
 </script>
-<script type="module" src="assets/js/board3d.js"></script>
+<script type="module" src="assets/js/cable3d.js"></script>
 </body>
 </html>

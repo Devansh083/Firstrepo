@@ -1,6 +1,6 @@
 # Portfolio: Power electronics, from simulation to real-time hardware
 
-A static personal portfolio (HTML/CSS/JS, no build step) with a scroll-driven 3D converter board built in Three.js (loaded from jsDelivr; falls back to a 2D schematic if WebGL is unavailable), for a B.Tech EEE student at VIT Chennai working on power electronics for EVs, renewables and smart grids.
+A static personal portfolio (HTML/CSS/JS, no build step). A Three.js layer (loaded from jsDelivr) draws an orange HV cable that pays out of a Li-ion cell as you scroll, runs through a converter module and plugs into a supercapacitor at the end; without WebGL the page falls back to a plain layout. It is for a B.Tech EEE student at VIT Chennai working on power electronics for EVs, renewables and smart grids.
 
 ## Preview locally
 

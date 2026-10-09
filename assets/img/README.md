@@ -1,6 +1,6 @@
 # Figures
 
-Drop your real figures here with these exact names. Until a file exists, the site shows a "NO SIGNAL" screen naming the missing file.
+Drop your real figures here with these exact names. Until a file exists, the site shows an empty figure frame naming the missing file.
 
 | File | Used in |
 |---|---|
