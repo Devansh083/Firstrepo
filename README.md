@@ -15,7 +15,7 @@ Repo → **Settings → Pages** → Source: *Deploy from a branch* → pick the 
 
 ## Before publishing: fill these in
 
-- [ ] Figures in `assets/img/` (see `assets/img/README.md` for file names)
+- [ ] Figures in `assets/img/` (names listed in `assets/img/README.md`)
 - [ ] `assets/resume.pdf`
 - [ ] LinkedIn URL (search `linkedin.com/` in `index.html`)
 - [ ] Public email (search `your.email@example.com`)

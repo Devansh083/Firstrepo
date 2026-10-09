@@ -1,14 +1,13 @@
 # Figures
 
-Drop your real figures here with these exact names. Until a file exists, the site shows a dashed placeholder naming the missing file.
+Drop your real figures here with these exact names. Until a file exists, the site shows a "NO SIGNAL" screen naming the missing file.
 
 | File | Used in |
 |---|---|
-| `efficiency-vs-power.png` | Featured research: IEEE-style efficiency vs output power |
-| `closed-loop-response.png` | Featured research: closed-loop boost response vs base paper |
-| `opal-rt-setup.jpg` | Featured research: OPAL-RT OP4610XG setup photo |
-| `mppt-comparison.png` | Projects: P&O vs InC under irradiance step |
-| `esp32-monitor.jpg` | Projects: ESP32 solar monitor hardware |
-| `piezo-circuit.png` | Projects: charge amplifier schematic |
+| `efficiency-400v.png` | Results (large tile): efficiency vs output power, 400 V |
+| `efficiency-800v.png` | Results: efficiency vs output power, 800 V |
+| `closed-loop-response.png` | Results: closed-loop boost vs base paper |
+| `sc-voltage-study.png` | Results: performance vs supercapacitor voltage |
+| `opal-rt-setup.jpg` | Results: OPAL-RT OP4610XG setup photo |
 
-Tip: export Matplotlib plots at `dpi=200` with a white background; keep each file under ~500 KB.
+Tip: export Matplotlib plots at `dpi=200` with a white background; keep each under ~500 KB.
